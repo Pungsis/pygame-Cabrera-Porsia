@@ -1,0 +1,84 @@
+Arroz,1001,1037
+Yerba mate,4546,4904
+Televisor Smart,2055,2439
+Aceite de cocina,3674,4783
+Mouse,1635,3603
+Monitor de computadora,2782,2870
+Silla de oficina,3174,4391
+Lavadora,3720,4197
+Refrigerador,3352,4533
+Smartphone,2070,2224
+Laptop,4650,4854
+Cafetera,2358,3646
+Batidora,1833,4401
+Microondas,4254,4624
+Tostadora,2802,4655
+Cama,1273,2141
+Mesa de comedor,3335,4570
+Sillon,1700,3657
+Coche,1057,4732
+Bicicleta,2795,3048
+Auriculares,3324,3929
+Altavoces,3065,4661
+Teclado,3873,4874
+Impresora,4746,4756
+Escritorio,2030,3717
+Ventilador,3544,3820
+Secadora de ropa,3480,4584
+Plancha,1249,1701
+Licuadora,4726,4806
+Horno,1316,2511
+Estufa,3440,4965
+Aspiradora,4824,4831
+Maquina de ejercicios,3318,3377
+Libros,3228,4323
+Pelotas,3998,4850
+Ropa,2686,4203
+Zapatos,3999,4432
+Joyas,2001,3996
+Gafas de sol,1202,4629
+Reloj,1622,3328
+Bolsa,3752,4995
+Mochila,4238,4473
+Maleta de viaje,3425,3595
+Auriculares inalambricos,2024,2652
+Camara digital,1673,3405
+Consola de videojuegos,2567,3170
+Tableta,3672,4967
+Papel higienico,2409,4495
+Champu,1065,2905
+Jabon de manos,2286,4203
+Sabana,4302,4467
+Almohada,4249,4488
+Toalla,3301,3993
+Escoba,2751,3575
+Mop,4504,4862
+Cortadora de cesped,1976,3258
+Lampara de escritorio,3188,3510
+Candelabro,2170,2592
+Reloj despertador,1291,4287
+Taza de cafe,3180,4108
+Tetera,3558,3566
+Tostadora de pan,2678,2866
+Cuchillo de cocina,3986,4156
+Olla,2143,4723
+Sarten,2853,4090
+Cubiertos,3282,3693
+Cepillode dientes,4244,4276
+Pasta dental,3697,4199
+Jabon de baño,4271,4834
+Espejo de baño,3437,4682
+Champu para mascotas,3108,3804
+Collar para perro,1936,2451
+Correa para perro,4658,4986
+Camiseta,4690,4978
+Pantalones,3084,4236
+Chaqueta,4987,4998
+Bufanda,1063,1678
+Guantes,4072,4313
+Gorra,2372,3036
+Paraguas,1098,3245
+Maquillaje,3212,4167
+Perfume,4940,4993
+Lentes de lectura,2695,4677
+Caja de herramientas,4356,4367
