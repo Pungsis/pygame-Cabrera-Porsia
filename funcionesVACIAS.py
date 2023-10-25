@@ -26,18 +26,36 @@ def lectura():
 #De la lista de productos elige uno al azar y devuelve una lista de 3 elementos, el primero el nombre del producto, el segundo si es economico
 #o premium y el tercero el precio.
 def buscar_producto(lista_productos):
-    producto = ["Silla de oficina", "(premium)", 4391]
-    return producto
+    # producto = ["Silla de oficina", "(premium)", 4391]
+    producto_azar = lista_productos[random.randint(0, len(lista_productos) - 1)]
+    index = random.randint(1,2)
+    precio = producto_azar[index]
+    if index == 1:
+        return [producto_azar[0], "(economico)", precio]
+    else:
+        return [producto_azar[0], "(premium)", precio]
+
+
 
 #Elige el producto. Debe tener al menos dos productos con un valor similar
 def dameProducto(lista_productos, margen):
-    producto = ["Silla de oficina", "(premium)", 4391]
+    busqueda = []
+    while len(busqueda) < 2:
+        producto = buscar_producto(lista_productos)
+        if producto[1] == "(premium)":
+            busqueda = list(filter(lambda x: abs(producto[2] - x[2]) < margen, lista_productos))
+        else:
+            busqueda = list(filter(lambda x: abs(producto[2] - x[1]) < margen, lista_productos))
     return producto
+
+
 
 
 #Devuelve True si existe el precio recibido como parametro aparece al menos 3 veces. Debe considerar el Margen.
 def esUnPrecioValido(precio, lista_productos, margen):
-    return True
+    busqueda = list(filter(lambda x: abs(precio - x[1]) < margen, lista_productos))
+    return len(busqueda) >= 3
+
 
 # Busca el precio del producto_principal y el precio del producto_candidato, si son iguales o dentro
 # del margen, entonces es valido y suma a la canasta el valor del producto. No suma si eligió directamente
