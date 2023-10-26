@@ -11,7 +11,6 @@ from configuracion import *
 from funcionesVACIAS import *
 from extras import *
 
-
 def main():
     # Centrar la ventana y despues inicializar pygame
     os.environ["SDL_VIDEO_CENTERED"] = "1"

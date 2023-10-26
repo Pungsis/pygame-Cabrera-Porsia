@@ -31,9 +31,9 @@ def buscar_producto(lista_productos):
     index = random.randint(1,2)
     precio = producto_azar[index]
     if index == 1:
-        return [producto_azar[0], "(economico)", precio]
+        return [producto_azar[0], "(Economico)", precio]
     else:
-        return [producto_azar[0], "(premium)", precio]
+        return [producto_azar[0], "(Premium)", precio]
 
 
 
@@ -42,7 +42,7 @@ def dameProducto(lista_productos, margen):
     busqueda = []
     while len(busqueda) < 2:
         producto = buscar_producto(lista_productos)
-        if producto[1] == "(premium)":
+        if producto[1] == "(Premium)":
             busqueda = list(filter(lambda x: abs(producto[2] - x[2]) < margen, lista_productos))
         else:
             busqueda = list(filter(lambda x: abs(producto[2] - x[1]) < margen, lista_productos))
@@ -53,7 +53,7 @@ def dameProducto(lista_productos, margen):
 
 #Devuelve True si existe el precio recibido como parametro aparece al menos 3 veces. Debe considerar el Margen.
 def esUnPrecioValido(precio, lista_productos, margen):
-    busqueda = list(filter(lambda x: abs(precio - x[1]) < margen, lista_productos))
+    busqueda = list(filter(lambda x: abs(precio - x[1]) < margen or precio == x[1], lista_productos))
     return len(busqueda) >= 3
 
 
@@ -61,18 +61,42 @@ def esUnPrecioValido(precio, lista_productos, margen):
 # del margen, entonces es valido y suma a la canasta el valor del producto. No suma si eligió directamente
 #el producto
 def procesar(producto_principal, producto_candidato, margen):
-    return 0
+    precio_principal = producto_principal[2]
+    precio_candidato = producto_candidato[2]
+    if precio_principal == precio_candidato or abs(precio_principal - precio_candidato) < margen:
+        return producto_principal[2]
+    else:
+        return 0
+
+
 
 #Elegimos productos aleatorios, garantizando que al menos 2 tengan el mismo precio.
 #De manera aleatoria se debera tomar el valor economico o el valor premium. Agregar al nombre '(economico)' o '(premium)'
 #para que sea mostrado en pantalla.
 def dameProductosAleatorios(producto, lista_productos, margen):
-    productos_seleccionados =   [["Monitor de computadora", "(premium)", 2870],
-            ["Silla de oficina", "(economico)", 3174],
-            ["Lavadora", "(premium)", 4197],
-            ["Refrigerador", "(premium)", 4533],
-            ["Laptop", "(economico)", 4650],
-            ["Cafetera", "(economico)", 2358]]
-    return productos_seleccionados
 
+    lista_copia = lista_productos[:]
+    print(len(lista_copia))
+    # Busco el producto de la copia de la lista de productos y lo remuevo
+    lista_copia = list(filter(lambda x: producto[0] != x[0], lista_copia))
+    print(len(lista_copia), producto[0])
+    nueva_lista = []
+    while len(nueva_lista) < 5:
+        index_azar = random.randint(0, len(lista_copia) - 1)
+        nueva_lista.append(lista_copia[index_azar])
+        lista_copia.pop(index_azar)
+    def transformada(x):
+            azar = random.randint(1,2)
+            if azar == 1:
+                return [x[0], "(Economico)", x[1]]
+            else:
+                return [x[0], "(Premium)", x[2]]
+
+    if esUnPrecioValido(producto[2], nueva_lista, margen): 
+        lista_devolver = list(map(transformada, nueva_lista))
+        return [producto] + lista_devolver
+    else:
+        lista_devolver = list(map(transformada, nueva_lista))
+        return [producto] + lista_devolver
+        
 
