@@ -41,11 +41,11 @@ def buscar_producto(lista_productos):
 def dameProducto(lista_productos, margen):
     busqueda = []
     while len(busqueda) < 2:
-        producto = buscar_producto(lista_productos)
+        producto = lista_productos[random.randint(0,5)]
         if producto[1] == "(Premium)":
             busqueda = list(filter(lambda x: abs(producto[2] - x[2]) < margen, lista_productos))
         else:
-            busqueda = list(filter(lambda x: abs(producto[2] - x[1]) < margen, lista_productos))
+            busqueda = list(filter(lambda x: abs(producto[2] - x[2]) < margen, lista_productos))
     return producto
 
 
@@ -81,7 +81,7 @@ def dameProductosAleatorios(producto, lista_productos, margen):
     lista_copia = list(filter(lambda x: producto[0] != x[0], lista_copia))
     print(len(lista_copia), producto[0])
     nueva_lista = []
-    while len(nueva_lista) < 5:
+    while len(nueva_lista) < 6:
         index_azar = random.randint(0, len(lista_copia) - 1)
         nueva_lista.append(lista_copia[index_azar])
         lista_copia.pop(index_azar)
@@ -99,4 +99,20 @@ def dameProductosAleatorios(producto, lista_productos, margen):
         lista_devolver = list(map(transformada, nueva_lista))
         return [producto] + lista_devolver
         
+def index_producto_elegido(lista_productos, producto_elegido):
+    index = 0
+    for i in range(0, len(lista_productos)):
+        if lista_productos[i][0] == producto_elegido[0]:
+            index = i
+            break
+            
+    return index
 
+
+# lista_productos = lectura()  
+# producto = dameProducto(lista_productos, 1000)
+# productos_en_pantalla = dameProductosAleatorios(producto, lista_productos, 1000)
+# producto2 = dameProducto(productos_en_pantalla[1:],1000)
+# print(productos_en_pantalla)
+# print(producto2)
+# print(index_producto_elegido(productos_en_pantalla, producto2))

@@ -17,103 +17,142 @@ pygame.init()
 # Preparar la ventana
 screen = pygame.display.set_mode((ANCHO, ALTO))
 pygame.display.set_caption("Peguele al precio")
+BACKGROUND = pygame.image.load(os.path.join("assets", "background.png")).convert()
+NAVE_ESPACIAL_IMAGEN = pygame.image.load(os.path.join("assets", "spaceship_red.png"))
+NAVE_ESPACIAL_WIDTH = 100
+NAVE_ESPACIAL_HEIGHT = 95
+NAVE_ESPACIAL = pygame.transform.rotate(pygame.transform.scale(NAVE_ESPACIAL_IMAGEN, (NAVE_ESPACIAL_WIDTH, NAVE_ESPACIAL_HEIGHT)), 90)
+VELOCIDAD_NAVE = 5
+VELOCIDAD_DISPARO = 5
+MAXIMOS_DISPAROS = 3
+disparos = []
+DISPARO_IMPACTO = pygame.USEREVENT + 2
+IMAGEN_PRODUCTO_WIDTH = 50
+IMAGEN_PRODUCTO_HEIGHT = 50
+
+def dibujar_nave(rect):
+    screen.blit(NAVE_ESPACIAL, (rect.x, rect.y))
+
+def manejar_movimiento_nave(tecla_presionada , rectangulo):
+    if tecla_presionada[pygame.K_w] and rectangulo.y - VELOCIDAD_NAVE >= 100 and rectangulo.y - VELOCIDAD_NAVE <= 550: # Arriba
+        rectangulo.y -= VELOCIDAD_NAVE
+    
+    if tecla_presionada[pygame.K_s] and rectangulo.y - VELOCIDAD_NAVE >= 0 and rectangulo.y - VELOCIDAD_NAVE <= 500: # Abajo
+        rectangulo.y += VELOCIDAD_NAVE
+
+
+def manejar_disparos(lista_disparos, rectangulo):
+    for disparo in lista_disparos:
+        disparo.x += VELOCIDAD_DISPARO
+        if rectangulo.colliderect(disparo):
+            pygame.event.post(pygame.event.Event(DISPARO_IMPACTO, rect=rectangulo.y))
+            lista_disparos.remove(disparo)
+        if disparo.x > ANCHO:
+            lista_disparos.remove(disparo)
+
+def dibujar_rect_productos():
+    lista_rect = []
+    y2 = 75
+    for i in range(0,7):
+        rect = pygame.Rect(700, y2, IMAGEN_PRODUCTO_WIDTH,IMAGEN_PRODUCTO_HEIGHT)
+        lista_rect.append(rect)
+        y2 += 75
+    return lista_rect
+
+def dibujar_disparos(disparos):
+    for disparo in disparos:
+        pygame.draw.rect(screen, (255,0,0), disparo)
 
 def get_font(size): 
     return pygame.font.Font("assets/font.ttf", size)
 
 def main():
-
-    # tiempo total del juego
+    rect = pygame.Rect(100, 300, NAVE_ESPACIAL_WIDTH,NAVE_ESPACIAL_HEIGHT)
+    lista_rectangulos_prod = dibujar_rect_productos()
+    diccionario = {}
+    contador = 0
+    for i in lista_rectangulos_prod:
+        diccionario[contador] = [i.x, i.y]
+        contador += 1
+    print(diccionario)
     gameClock = pygame.time.Clock()
     totaltime = 0
-    segundos = 5 # Tiempo max va aca
-    fps = FPS_inicial
+    nivel = 1
+    segundos = TIEMPO_MAX # Tiempo max va aca
     corriendo = True
-
-    puntos = 0  # puntos o dinero acumulado por el jugador
+    puntos = 0 
     producto_candidato = ""
-
-
-    #Lee el archivo y devuelve una lista con los productos,
-    lista_productos = lectura()  # lista de productos
-
-    # Elegir un producto, [producto, calidad, precio]
+    lista_productos = lectura()  
     producto = dameProducto(lista_productos, MARGEN)
-
-    # Elegimos productos aleatorios, garantizando que al menos 2 mas tengan el mismo precio.
-    # De manera aleatoria se debera tomar el valor economico o el valor premium.
-    # Agregar  '(economico)' o '(premium)' y el precio
     productos_en_pantalla = dameProductosAleatorios(producto, lista_productos, MARGEN)
+    producto_elegido_programa = dameProducto(productos_en_pantalla[1:], MARGEN)
+    index = index_producto_elegido(productos_en_pantalla, producto_elegido_programa)
     print(productos_en_pantalla)
-
-    # dibuja la pantalla la primera vez
     dibujar(screen, productos_en_pantalla, producto,
-            producto_candidato, puntos, segundos)
+            producto_candidato, puntos, segundos, nivel)
     time_delay = 1000
     timer_event = pygame.USEREVENT+1
     pygame.time.set_timer(timer_event, time_delay)
 
-    while segundos > fps/1000 or corriendo:
-        # 1 frame cada 1/fps segundos
-        gameClock.tick(fps)
+
+    while corriendo:
+        gameClock.tick(40)
         totaltime += gameClock.get_time()
 
-        if True:
-            fps = 10
-
-        # Buscar la tecla apretada del modulo de eventos de pygame
         for e in pygame.event.get():
 
-            # QUIT es apretar la X en la ventana
             if e.type == QUIT:
                 pygame.quit()
-                return ()
+                sys.exit()
             if e.type == timer_event:
                 segundos -= 1
                 if segundos == 0:
                     juego_terminado(puntos)
                     corriendo = False
-
-            
-
-            # Ver si fue apretada alguna tecla
             if e.type == KEYDOWN:
-                letra = dameLetraApretada(e.key)
-                producto_candidato += letra  # va concatenando las letras que escribe
-                if e.key == K_BACKSPACE:
-                    # borra la ultima
-                    producto_candidato = producto_candidato[0:len(producto_candidato)-1]
-                if e.key == K_RETURN:  # presionó enter
-                    indice = int(producto_candidato)
-                    # chequeamos si el prducto no es el producto principal. Si no lo es procesamos el producto
-                    if indice < len(productos_en_pantalla):
-                        puntos += procesar(producto, productos_en_pantalla[indice], MARGEN)
-                        producto_candidato = ""
-                        # Elegir un producto
-                        producto = dameProducto(lista_productos, MARGEN)
-                        # elegimos productos aleatorios, garantizando que al menos 2 mas tengan el mismo precio
-                        productos_en_pantalla = dameProductosAleatorios(producto, lista_productos, MARGEN)
-                    else:
-                        producto_candidato = ""
-        # Hay que cambiar esto! get ticks se inicializa en pygame.init()
-        
-            
+                # Hay un error si pones una letra por ejemplo y clickeas
+                # aunque no aparezca en  pantalla!
+                # letra = dameLetraApretada(e.key)
+                # producto_candidato += letra  # va concatenando las letras que escribe
+                # if e.key == K_BACKSPACE:
+                #     producto_candidato = producto_candidato[0:len(producto_candidato)-1]
+                # if e.key == K_RETURN:  # presionó enter
+                #     nivel += 1
+                   
+                #     if indice < len(productos_en_pantalla):
+                #         puntos += procesar(producto, productos_en_pantalla[indice], MARGEN)
+                #         producto_candidato = ""
+                #         producto = dameProducto(lista_productos, MARGEN)
+                #         productos_en_pantalla = dameProductosAleatorios(producto, lista_productos, MARGEN)
+                #     else:
+                #         producto_candidato = ""
+                if e.key == pygame.K_RCTRL and len(disparos) < MAXIMOS_DISPAROS:
+                    bullet = pygame.Rect(rect.x + rect.width, rect.y + rect.height // 2 - 2, 10, 5)
+                    disparos.append(bullet)
+            if e.type == DISPARO_IMPACTO:
+                print(diccionario[index][1])
+                if e.rect == diccionario[index][1]:
+                    print("PRODUCTO ELEGIDO GOLPEADO!!!")
+                    puntos += procesar(producto, productos_en_pantalla[index], MARGEN)
+                producto = dameProducto(lista_productos, MARGEN)
+                productos_en_pantalla = dameProductosAleatorios(producto, lista_productos, MARGEN)
+                producto_elegido_programa = dameProducto(productos_en_pantalla[1:], MARGEN)
+                index = index_producto_elegido(productos_en_pantalla, producto_elegido_programa)    
+        for i in lista_rectangulos_prod:
+            manejar_disparos(disparos,i)
+        tecla_presionada = pygame.key.get_pressed()
+        manejar_movimiento_nave(tecla_presionada, rect)
 
-        # Limpiar pantalla anterior
         screen.fill(COLOR_FONDO)
-
-        # Dibujar de nuevo todo
+        screen.blit(BACKGROUND, (0, 0))
+        dibujar_nave(rect)
+        dibujar_disparos(disparos)
         dibujar(screen, productos_en_pantalla, producto,
-                producto_candidato, puntos, segundos)
+            producto_candidato, puntos, segundos, nivel)
 
-        pygame.display.flip()
+        pygame.display.update()
 
-    while 1 or corriendo:
-        # Esperar el QUIT del usuario
-        for e in pygame.event.get():
-            if e.type == QUIT:
-                pygame.quit()
-                sys.exit()
+
 
 def menu():
     corriendo = True
@@ -294,4 +333,4 @@ def pintarDeNuevo(font, font2):
 
 # Programa Principal ejecuta Main
 if __name__ == "__main__":
-    menu()
+    main()
