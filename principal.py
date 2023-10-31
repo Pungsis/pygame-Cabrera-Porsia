@@ -9,6 +9,7 @@ from pygame.locals import *
 from configuracion import *
 from funcionesVACIAS import *
 from extras import *
+from records_utils import *
 
 os.environ["SDL_VIDEO_CENTERED"] = "1"
 
@@ -233,6 +234,9 @@ def juego_terminado(puntos):
                         print(apodo)
                 if event.key == K_RETURN:
                     if len(str(apodo)) == 6:
+                        write_in_record(puntos, apodo)
+                        diccionario_record = recordsDic(records_helper()[0], records_helper()[1])
+                        write_records(diccionario_record)
                         records()
 
                 if event.key == K_BACKSPACE:
@@ -290,4 +294,4 @@ def pintarDeNuevo(font, font2):
 
 # Programa Principal ejecuta Main
 if __name__ == "__main__":
-    juego_terminado(1000)
+    menu()
