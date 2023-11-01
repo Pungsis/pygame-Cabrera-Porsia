@@ -38,10 +38,13 @@ def dibujar(screen, productos_en_pantalla, producto_principal, producto_candidat
             pygame.draw.rect(screen, (255, 0, 0), (475, 10, 70, 70), 2)
             screen.blit(imagen_transformada, (475, 10))
         else:
-            rect = pygame.Rect(700, y2, IMAGEN_PRODUCTO_WIDTH,IMAGEN_PRODUCTO_HEIGHT) 
+            rect = pygame.Rect(600, y2, IMAGEN_PRODUCTO_WIDTH,IMAGEN_PRODUCTO_HEIGHT) 
             imagen = pygame.image.load(os.path.join("assets", "productos", f"{producto[0]}.png"))
             imagen_transformada = pygame.transform.scale(imagen, (IMAGEN_PRODUCTO_WIDTH, IMAGEN_PRODUCTO_HEIGHT))
             screen.blit(imagen_transformada, (rect.x, rect.y))
+            render = defaultFont.render(f"${producto[2]}", True, (255,255,255))
+            screen.blit(render, (675, y2 + 20))
+
             
 
         y2 += 75

@@ -12,6 +12,7 @@ def records_helper():
     print(lista, lista2)
     return lista, lista2
 
+print(records_helper())
 
 def recordsDic(lista_puntajes, lista_apodos):
     copia_lista_puntajes = lista_puntajes[:]
@@ -35,10 +36,14 @@ def write_records(dic):
     file = open("./records.txt", "w")
     contador = 0
     for x, y in dic.items():
-        file.write(f"{x}            {y[1]}              {y[0]}\n")
-        contador += 1
         if contador == 10:
             break
+        if contador < 9:
+           file.write(f"{x}            {y[1]}             {y[0]}\n")
+        elif contador == 9:
+           file.write(f"{x}           {y[1]}             {y[0]}\n")
+
+        contador += 1
 
     file.close()
     

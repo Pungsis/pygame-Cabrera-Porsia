@@ -5,6 +5,16 @@ import math
 from extras import *
 
 # lee el archivo y carga en la lista lista_producto todas las palabras
+def lectura2():
+    lista = []
+    archivo = open("./productos.txt")
+    for linea in archivo:
+        linea = linea[0:-1]
+        lista.append(linea.split(","))
+    archivo.close()
+    return lista
+
+print(lectura2())
 
 def lectura():
     return [["Arroz", 1001, 1037],

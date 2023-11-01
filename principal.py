@@ -54,7 +54,7 @@ def dibujar_rect_productos():
     lista_rect = []
     y2 = 75
     for i in range(0,7):
-        rect = pygame.Rect(700, y2, IMAGEN_PRODUCTO_WIDTH,IMAGEN_PRODUCTO_HEIGHT)
+        rect = pygame.Rect(600, y2, IMAGEN_PRODUCTO_WIDTH,IMAGEN_PRODUCTO_HEIGHT)
         lista_rect.append(rect)
         y2 += 75
     return lista_rect
@@ -78,7 +78,7 @@ def main():
     gameClock = pygame.time.Clock()
     totaltime = 0
     nivel = 1
-    segundos = 5 # Tiempo max va aca
+    segundos = TIEMPO_MAX # Tiempo max va aca
     corriendo = True
     puntos = 0 
     producto_candidato = ""
@@ -275,6 +275,7 @@ def juego_terminado(puntos):
                         print(apodo)
                 if event.key == K_RETURN:
                     if len(str(apodo)) == 6:
+                        
                         write_in_record(puntos, apodo)
                         diccionario_record = recordsDic(records_helper()[0], records_helper()[1])
                         write_records(diccionario_record)
@@ -334,17 +335,17 @@ def pintarDeNuevo(font, font2):
     texto =  font2.render("Posicion     Apodo          Puntos", True, (0, 0, 255))
     screen.blit(texto, [25, 125])
     archivo_records = open("./records.txt")
-    x = 30
+    y = 30
 
     for linea in archivo_records:
             linea = linea[0:-1]
             texto = font2.render(linea, True, (255, 0, 0))
-            x+= 30
-            screen.blit(texto, [25, 125 + x])
+            y+= 30
+            screen.blit(texto, [25, 125 + y])
 
     archivo_records.close()
 
 
 # Programa Principal ejecuta Main
 if __name__ == "__main__":
-    menu()
+    juego_terminado(2)
