@@ -5,18 +5,21 @@ import math
 from extras import *
 
 # lee el archivo y carga en la lista lista_producto todas las palabras
-def lectura2():
+def lectura():
     lista = []
     archivo = open("./productos.txt")
+    contador = 0
     for linea in archivo:
         linea = linea[0:-1]
         lista.append(linea.split(","))
+        lista[contador][1] = int(lista[contador][1])
+        lista[contador][2] = int(lista[contador][2])
+        contador += 1
     archivo.close()
     return lista
 
-print(lectura2())
 
-def lectura():
+def lectura2():
     return [["Arroz", 1001, 1037],
             ["Yerba mate", 4546, 4904],
             ["Televisor Smart", 2055, 2439],
@@ -41,9 +44,9 @@ def buscar_producto(lista_productos):
     index = random.randint(1,2)
     precio = producto_azar[index]
     if index == 1:
-        return [producto_azar[0], "(Economico)", precio]
+        return [producto_azar[0], "(Economico)", int(precio)]
     else:
-        return [producto_azar[0], "(Premium)", precio]
+        return [producto_azar[0], "(Premium)", int(precio)]
 
 
 
@@ -63,7 +66,7 @@ def dameProducto(lista_productos, margen):
 
 #Devuelve True si existe el precio recibido como parametro aparece al menos 3 veces. Debe considerar el Margen.
 def esUnPrecioValido(precio, lista_productos, margen):
-    busqueda = list(filter(lambda x: abs(precio - x[1]) < margen or precio == x[1], lista_productos))
+    busqueda = list(filter(lambda x: abs(precio - x[2]) < margen or precio == x[1], lista_productos))
     return len(busqueda) >= 3
 
 
@@ -89,7 +92,6 @@ def dameProductosAleatorios(producto, lista_productos, margen):
     print(len(lista_copia))
     # Busco el producto de la copia de la lista de productos y lo remuevo
     lista_copia = list(filter(lambda x: producto[0] != x[0], lista_copia))
-    print(len(lista_copia), producto[0])
     nueva_lista = []
     while len(nueva_lista) < 6:
         index_azar = random.randint(0, len(lista_copia) - 1)
@@ -98,10 +100,9 @@ def dameProductosAleatorios(producto, lista_productos, margen):
     def transformada(x):
             azar = random.randint(1,2)
             if azar == 1:
-                return [x[0], "(Economico)", x[1]]
+                return [x[0], "(Economico)", int(x[1])]
             else:
-                return [x[0], "(Premium)", x[2]]
-
+                return [x[0], "(Premium)", int(x[2])]
     if esUnPrecioValido(producto[2], nueva_lista, margen): 
         lista_devolver = list(map(transformada, nueva_lista))
         return [producto] + lista_devolver

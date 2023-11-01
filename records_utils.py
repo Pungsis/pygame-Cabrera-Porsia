@@ -9,10 +9,8 @@ def records_helper():
   
     
     archivo_records.close()
-    print(lista, lista2)
     return lista, lista2
 
-print(records_helper())
 
 def recordsDic(lista_puntajes, lista_apodos):
     copia_lista_puntajes = lista_puntajes[:]
@@ -27,7 +25,6 @@ def recordsDic(lista_puntajes, lista_apodos):
                 # lista.append([copia_lista_puntajes[i], lista_apodos[j]])
                 lista_puntajes.pop(j)
                 lista_apodos.pop(j)
-                print(lista_apodos)
                 break
     return diccionario
 

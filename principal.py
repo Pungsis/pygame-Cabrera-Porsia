@@ -83,7 +83,8 @@ def main():
     puntos = 0 
     producto_candidato = ""
     lista_productos = lectura()  
-    producto = dameProducto(lista_productos, MARGEN)
+    producto = buscar_producto(lista_productos)
+    print(producto)
     productos_en_pantalla = dameProductosAleatorios(producto, lista_productos, MARGEN)
     producto_elegido_programa = dameProducto(productos_en_pantalla[1:], MARGEN)
     index = index_producto_elegido(productos_en_pantalla, producto_elegido_programa)
@@ -130,7 +131,6 @@ def main():
                     bullet = pygame.Rect(rect.x + rect.width, rect.y + rect.height // 2 - 2, 10, 5)
                     disparos.append(bullet)
             if e.type == DISPARO_IMPACTO:
-                print(diccionario[index][1])
                 nivel += 1
                 if e.rect == diccionario[index][1]:
                     print("PRODUCTO ELEGIDO GOLPEADO!!!")
@@ -191,7 +191,7 @@ def menu():
                     corriendo = False
               
                 if QUIT_BUTTON.chequearEntrada(MENU_MOUSE_POSICION):
-                    records()
+                    records("F A L S E")
 
         if corriendo:
             pygame.display.update()
@@ -272,14 +272,13 @@ def juego_terminado(puntos):
                     # Recordar los espacios en blanco! por eso el 6
                     if len(str(apodo)) < 6:
                         apodo += str(pygame.key.name(event.key)).upper() + " "
-                        print(apodo)
                 if event.key == K_RETURN:
                     if len(str(apodo)) == 6:
                         
                         write_in_record(puntos, apodo)
                         diccionario_record = recordsDic(records_helper()[0], records_helper()[1])
                         write_records(diccionario_record)
-                        records()
+                        records(apodo)
 
                 if event.key == K_BACKSPACE:
                     apodo = apodo[0:len(apodo) - 2]
@@ -298,14 +297,14 @@ def juego_terminado(puntos):
         pygame.display.update()
 
 
-def records():
+def records(apodo):
     fpsClock = pygame.time.Clock()
     pygame.display.flip()
     font = pygame.font.Font("assets/font.ttf", 40)
     font2 = pygame.font.Font("assets/font.ttf", 20)
     corriendo = True
     while corriendo:
-        pintarDeNuevo(font, font2)
+        pintarDeNuevo(font, font2, apodo)
         MENU_MOUSE_POSICION = pygame.mouse.get_pos()
         MENU_TEXT = get_font(30).render("", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(400, 100))
@@ -328,7 +327,10 @@ def records():
             pygame.display.flip()
 
 
-def pintarDeNuevo(font, font2):
+def pintarDeNuevo(font, font2, apodo):
+    apodo = apodo.split(" ")[0:-1]
+    apodo = "".join(apodo)
+    print(apodo)
     screen.fill((0, 0, 0))
     texto =  font.render("Highscores", True, (0, 0, 255))
     screen.blit(texto, [175, 25])
@@ -336,16 +338,20 @@ def pintarDeNuevo(font, font2):
     screen.blit(texto, [25, 125])
     archivo_records = open("./records.txt")
     y = 30
-
     for linea in archivo_records:
             linea = linea[0:-1]
-            texto = font2.render(linea, True, (255, 0, 0))
-            y+= 30
-            screen.blit(texto, [25, 125 + y])
+            if linea.find(apodo) >= 0:
+                texto = font2.render(linea, True, (255, 200, 23))
+                y+= 30
+                screen.blit(texto, [25, 125 + y])
+            else:
+                texto = font2.render(linea, True, (255, 0, 0))
+                y+= 30
+                screen.blit(texto, [25, 125 + y])
 
     archivo_records.close()
 
 
 # Programa Principal ejecuta Main
 if __name__ == "__main__":
-    juego_terminado(2)
+    juego_terminado(1003000)
