@@ -35,7 +35,7 @@ def write_records(dic):
     file = open("./records.txt", "w")
     contador = 0
     for x, y in dic.items():
-        file.write(f"{x}            {y[1]}            {y[0]}\n")
+        file.write(f"{x}            {y[1]}              {y[0]}\n")
         contador += 1
         if contador == 10:
             break

@@ -78,7 +78,7 @@ def main():
     gameClock = pygame.time.Clock()
     totaltime = 0
     nivel = 1
-    segundos = TIEMPO_MAX # Tiempo max va aca
+    segundos = 5 # Tiempo max va aca
     corriendo = True
     puntos = 0 
     producto_candidato = ""
@@ -131,9 +131,11 @@ def main():
                     disparos.append(bullet)
             if e.type == DISPARO_IMPACTO:
                 print(diccionario[index][1])
+                nivel += 1
                 if e.rect == diccionario[index][1]:
                     print("PRODUCTO ELEGIDO GOLPEADO!!!")
                     puntos += procesar(producto, productos_en_pantalla[index], MARGEN)
+                
                 producto = dameProducto(lista_productos, MARGEN)
                 productos_en_pantalla = dameProductosAleatorios(producto, lista_productos, MARGEN)
                 producto_elegido_programa = dameProducto(productos_en_pantalla[1:], MARGEN)
@@ -159,6 +161,7 @@ def menu():
     fpsClock = pygame.time.Clock()
     pygame.display.flip()
     while corriendo:
+        screen.fill((0,0,0))
         MENU_MOUSE_POSICION = pygame.mouse.get_pos()
 
         MENU_TEXT = get_font(30).render("PEGUELE AL PRECIO", True, "#b68f40")
@@ -188,9 +191,7 @@ def menu():
                     corriendo = False
               
                 if QUIT_BUTTON.chequearEntrada(MENU_MOUSE_POSICION):
-                    corriendo = False
-                    pygame.quit()
-                    sys.exit()
+                    records()
 
         if corriendo:
             pygame.display.update()
@@ -226,7 +227,7 @@ def instrucciones():
         pygame.time.wait(1000)
         for event in pygame.event.get():
             # Presionar cualquier tecla para ir al juego 
-            if event.type == KEYDOWN:
+            if event.type == KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
                 main()
                 return
             if event.type == QUIT:
@@ -236,6 +237,7 @@ def instrucciones():
 
         if corriendo:
             pygame.display.update()
+            
 
 def juego_terminado(puntos):
     fpsClock = pygame.time.Clock()
@@ -300,24 +302,36 @@ def records():
     pygame.display.flip()
     font = pygame.font.Font("assets/font.ttf", 40)
     font2 = pygame.font.Font("assets/font.ttf", 20)
-    while True:
+    corriendo = True
+    while corriendo:
         pintarDeNuevo(font, font2)
+        MENU_MOUSE_POSICION = pygame.mouse.get_pos()
+        MENU_TEXT = get_font(30).render("", True, "#b68f40")
+        MENU_RECT = MENU_TEXT.get_rect(center=(400, 100))
+        MENU_BUTTON = Button(None, pos=(400, 550), 
+                                text_input="Volver al menu", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
+        screen.blit(MENU_TEXT, MENU_RECT)
+        MENU_BUTTON.actualizar(screen)
 
         for event in pygame.event.get():
             # Presionar cualquier tecla para ir al juego 
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-         
-        fpsClock.tick(30)
-        pygame.display.update()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if MENU_BUTTON.chequearEntrada(MENU_MOUSE_POSICION):
+                    menu()
+            MENU_BUTTON.actualizar(screen)
+            
+            fpsClock.tick(30)
+            pygame.display.flip()
 
 
 def pintarDeNuevo(font, font2):
     screen.fill((0, 0, 0))
     texto =  font.render("Highscores", True, (0, 0, 255))
     screen.blit(texto, [175, 25])
-    texto =  font2.render("Posicion     Apodo      puntos", True, (0, 0, 255))
+    texto =  font2.render("Posicion     Apodo          Puntos", True, (0, 0, 255))
     screen.blit(texto, [25, 125])
     archivo_records = open("./records.txt")
     x = 30
@@ -333,4 +347,4 @@ def pintarDeNuevo(font, font2):
 
 # Programa Principal ejecuta Main
 if __name__ == "__main__":
-    main()
+    menu()
