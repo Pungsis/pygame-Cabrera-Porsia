@@ -18,6 +18,8 @@ pygame.init()
 screen = pygame.display.set_mode((ANCHO, ALTO))
 pygame.display.set_caption("Peguele al precio")
 BACKGROUND = pygame.image.load(os.path.join("assets", "background.png")).convert()
+BACKGROUND_MENU = pygame.image.load(os.path.join("assets", "background2.jpg")).convert()
+BACKGROUND_MENU_TRANSFORMADA = pygame.transform.scale(BACKGROUND_MENU, (800, 800))
 NAVE_ESPACIAL_IMAGEN = pygame.image.load(os.path.join("assets", "spaceship_red.png"))
 NAVE_ESPACIAL_WIDTH = 100
 NAVE_ESPACIAL_HEIGHT = 95
@@ -160,6 +162,11 @@ def menu():
     corriendo = True
     fpsClock = pygame.time.Clock()
     pygame.display.flip()
+    coordenadas_lista = []
+    for i in range(60):
+            x = random.randint(0, 800)
+            y = random.randint(0, 600)
+            coordenadas_lista.append([x,y])
     while corriendo:
         screen.fill((0,0,0))
         MENU_MOUSE_POSICION = pygame.mouse.get_pos()
@@ -173,7 +180,7 @@ def menu():
                             text_input="2 jugadores", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
         QUIT_BUTTON = Button(None, pos=(400, 550), 
                             text_input="Records", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
-
+        screen.blit(BACKGROUND_MENU_TRANSFORMADA, (0,0))
         screen.blit(MENU_TEXT, MENU_RECT)
 
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
@@ -192,10 +199,19 @@ def menu():
               
                 if QUIT_BUTTON.chequearEntrada(MENU_MOUSE_POSICION):
                     records("F A L S E")
+       
+        for j in coordenadas_lista:
+            x = j[0]
+            y = j[1]
+            pygame.draw.circle(screen, COLOR_TEXTO, (x,y), 2)
+            j[1] += 1
+            if j[1] > ALTO:
+                j[1] = 0
 
-        if corriendo:
-            pygame.display.update()
-            fpsClock.tick(30)
+         
+
+        pygame.display.update()
+        fpsClock.tick(30)
     
 def instrucciones():
     fpsClock = pygame.time.Clock()
@@ -203,28 +219,15 @@ def instrucciones():
     font_titulo = pygame.font.Font('assets/font.ttf', 20)
     font_texto = pygame.font.Font('assets/font.ttf', 14)
     corriendo = True
+    coordenadas_lista = []
+    for i in range(60):
+            x = random.randint(0, 800)
+            y = random.randint(0, 600)
+            coordenadas_lista.append([x,y])
+    
     while True:
-        screen.fill((0, 0, 0))
-        texto =  font_titulo.render("Instrucciones", True, (255, 255, 255))
-        screen.blit(texto, [250, 25])
-        archivo_instrucciones = open("./instrucciones.txt")
-        x = 30
-
-        for linea in archivo_instrucciones:
-            linea = linea[0:-1]
-            texto = font_texto.render(linea, True, (255, 255, 255))
-            x+= 30
-            screen.blit(texto, [25, 100 + x])
-
-        texto =  font_titulo.render("TOQUE CUALQUIER TECLA PARA EMPEZAR", True, (255, 255, 255))
-        screen.blit(texto, [50, 500])
-
-        archivo_instrucciones.close()
-
-        fpsClock.tick(30)
-        pygame.display.flip()
-
-        pygame.time.wait(1000)
+        texto =  font_titulo.render("Instrucciones", True, (23, 255, 255))
+        screen.fill((0, 0, 0))        
         for event in pygame.event.get():
             # Presionar cualquier tecla para ir al juego 
             if event.type == KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
@@ -234,9 +237,29 @@ def instrucciones():
                 pygame.quit()
                 sys.exit()
                 corriendo == False
+        screen.blit(BACKGROUND_MENU_TRANSFORMADA, (0,0))
+        screen.blit(texto, [275, 25])
+        archivo_instrucciones = open("./instrucciones.txt")
+        x = 30
+        for linea in archivo_instrucciones:
+            linea = linea[0:-1]
+            texto = font_texto.render(linea, True, (200, 100, 200))
+            x+= 30
+            screen.blit(texto, [275, 100 + x])
 
-        if corriendo:
-            pygame.display.update()
+        texto =  font_titulo.render("TOQUE CUALQUIER TECLA PARA EMPEZAR", True, (255, 255, 255))
+        screen.blit(texto, [50, 500])
+        archivo_instrucciones.close()
+
+        for j in coordenadas_lista:
+            x = j[0]
+            y = j[1]
+            pygame.draw.circle(screen, COLOR_TEXTO, (x,y), 2)
+            j[1] += 1
+            if j[1] > ALTO:
+                j[1] = 0
+        fpsClock.tick(30)
+        pygame.display.update()
             
 
 def juego_terminado(puntos):
@@ -354,4 +377,4 @@ def pintarDeNuevo(font, font2, apodo):
 
 # Programa Principal ejecuta Main
 if __name__ == "__main__":
-    juego_terminado(1003000)
+    menu()

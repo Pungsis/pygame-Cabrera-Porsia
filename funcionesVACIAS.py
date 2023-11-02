@@ -19,21 +19,21 @@ def lectura():
     return lista
 
 
-def lectura2():
-    return [["Arroz", 1001, 1037],
-            ["Yerba mate", 4546, 4904],
-            ["Televisor Smart", 2055, 2439],
-            ["Aceite de cocina", 3674, 4783],
-            ["Mouse", 1635, 3603],
-            ["Monitor de computadora", 2782, 2870],
-            ["Silla de oficina", 3174, 4391],
-            ["Lavadora", 3720, 4197],
-            ["Refrigerador", 3352, 4533],
-            ["Smartphone", 2070, 2224],
-            ["Laptop", 4650, 4854],
-            ["Cafetera", 2358, 3646],
-            ["Batidora", 183, 4401],
-            ["Microondas", 4254, 4624]]
+# def lectura2():
+#     return [["Arroz", 1001, 1037],
+#             ["Yerba mate", 4546, 4904],
+#             ["Televisor Smart", 2055, 2439],
+#             ["Aceite de cocina", 3674, 4783],
+#             ["Mouse", 1635, 3603],
+#             ["Monitor de computadora", 2782, 2870],
+#             ["Silla de oficina", 3174, 4391],
+#             ["Lavadora", 3720, 4197],
+#             ["Refrigerador", 3352, 4533],
+#             ["Smartphone", 2070, 2224],
+#             ["Laptop", 4650, 4854],
+#             ["Cafetera", 2358, 3646],
+#             ["Batidora", 183, 4401],
+#             ["Microondas", 4254, 4624]]
 
 
 #De la lista de productos elige uno al azar y devuelve una lista de 3 elementos, el primero el nombre del producto, el segundo si es economico
@@ -64,7 +64,7 @@ def dameProducto(lista_productos, margen):
 
 
 
-#Devuelve True si existe el precio recibido como parametro aparece al menos 3 veces. Debe considerar el Margen.
+#Devuelve True si existe el precio recibido como parametro aparece al menos 2 veces. Debe considerar el Margen.
 def esUnPrecioValido(precio, lista_productos, margen):
     busqueda = list(filter(lambda x: abs(precio - x[2]) < margen or precio == x[1], lista_productos))
     return len(busqueda) >= 3
@@ -88,27 +88,21 @@ def procesar(producto_principal, producto_candidato, margen):
 #para que sea mostrado en pantalla.
 def dameProductosAleatorios(producto, lista_productos, margen):
 
-    lista_copia = lista_productos[:]
-    print(len(lista_copia))
-    # Busco el producto de la copia de la lista de productos y lo remuevo
-    lista_copia = list(filter(lambda x: producto[0] != x[0], lista_copia))
-    nueva_lista = []
-    while len(nueva_lista) < 6:
-        index_azar = random.randint(0, len(lista_copia) - 1)
-        nueva_lista.append(lista_copia[index_azar])
-        lista_copia.pop(index_azar)
+    #  Genero una lista de 7 productos (incluido el producto principal) 
+    lista_aleatoria = generarListaProdAleatorios(producto, lista_productos)
+    # Quiero garantizar que al menos 2 tengan precios similares
+    while esUnPrecioValido(producto[2], lista_aleatoria, margen):
+        lista_aleatoria = generarListaProdAleatorios(producto, lista_productos)
+
     def transformada(x):
             azar = random.randint(1,2)
             if azar == 1:
                 return [x[0], "(Economico)", int(x[1])]
             else:
                 return [x[0], "(Premium)", int(x[2])]
-    if esUnPrecioValido(producto[2], nueva_lista, margen): 
-        lista_devolver = list(map(transformada, nueva_lista))
-        return [producto] + lista_devolver
-    else:
-        lista_devolver = list(map(transformada, nueva_lista))
-        return [producto] + lista_devolver
+    lista_transformada = list(map(transformada, lista_aleatoria))
+    return [producto] + lista_transformada
+    
         
 def index_producto_elegido(lista_productos, producto_elegido):
     index = 0
@@ -119,6 +113,17 @@ def index_producto_elegido(lista_productos, producto_elegido):
             
     return index
 
+def generarListaProdAleatorios(producto, lista_productos):
+    lista_copia = lista_productos[:]
+    print(len(lista_copia))
+    # Busco el producto de la copia de la lista de productos y lo remuevo
+    lista_copia = list(filter(lambda x: producto[0] != x[0], lista_copia))
+    nueva_lista = []
+    while len(nueva_lista) < 6:
+        index_azar = random.randint(0, len(lista_copia) - 1)
+        nueva_lista.append(lista_copia[index_azar])
+        lista_copia.pop(index_azar)
+    return nueva_lista
 
 # lista_productos = lectura()  
 # producto = dameProducto(lista_productos, 1000)
