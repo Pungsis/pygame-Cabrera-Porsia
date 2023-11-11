@@ -161,7 +161,6 @@ def main():
 def menu():
     corriendo = True
     fpsClock = pygame.time.Clock()
-    pygame.display.flip()
     coordenadas_lista = []
     for i in range(60):
             x = random.randint(0, 800)
@@ -176,14 +175,14 @@ def menu():
 
         PLAY_BUTTON = Button(None, pos=(400, 250), 
                             text_input="1 jugador", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
-        OPTIONS_BUTTON = Button(None, pos=(400, 400), 
-                            text_input="2 jugadores", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
-        QUIT_BUTTON = Button(None, pos=(400, 550), 
+        RECORDS_BUTTON = Button(None, pos=(400, 400), 
                             text_input="Records", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
+        QUIT_BUTTON = Button(None, pos=(400, 550), 
+                            text_input="Salir", font=get_font(25), base_color="#d7fcd4", hovering_color="White")
         screen.blit(BACKGROUND_MENU_TRANSFORMADA, (0,0))
         screen.blit(MENU_TEXT, MENU_RECT)
 
-        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+        for button in [PLAY_BUTTON, RECORDS_BUTTON, QUIT_BUTTON]:
             button.cambiarColor(MENU_MOUSE_POSICION)
             button.actualizar(screen)
 
@@ -197,9 +196,11 @@ def menu():
                     instrucciones()
                     corriendo = False
               
-                if QUIT_BUTTON.chequearEntrada(MENU_MOUSE_POSICION):
+                if RECORDS_BUTTON.chequearEntrada(MENU_MOUSE_POSICION):
                     records("F A L S E")
-       
+                if QUIT_BUTTON.chequearEntrada(MENU_MOUSE_POSICION):
+                    pygame.quit()
+                    sys.exit()
         for j in coordenadas_lista:
             x = j[0]
             y = j[1]

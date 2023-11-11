@@ -10,7 +10,7 @@ from configuracion import *
 def dibujar(screen, productos_en_pantalla, producto_principal, producto_candidato, puntos, segundos, nivel):
 
     defaultFont = pygame.font.Font("assets/font.ttf", 20)
-    defaultFontGrande = pygame.font.Font("assets/font.ttf", 30)
+    defaultFontSmall = pygame.font.Font("assets/font.ttf", 10)
 
     # Linea del piso
     pygame.draw.line(screen, (255, 255, 255),
@@ -44,6 +44,8 @@ def dibujar(screen, productos_en_pantalla, producto_principal, producto_candidat
             screen.blit(imagen_transformada, (rect.x, rect.y))
             render = defaultFont.render(f"${producto[2]}", True, (255,255,255))
             screen.blit(render, (675, y2 + 20))
+            render = defaultFontSmall.render(f"{producto[1]}", True, (255,255,255))
+            screen.blit(render, (675, y2 + 50))
 
             
 
