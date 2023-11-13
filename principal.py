@@ -17,56 +17,8 @@ pygame.init()
 # Preparar la ventana
 screen = pygame.display.set_mode((ANCHO, ALTO))
 pygame.display.set_caption("Peguele al precio")
-BACKGROUND = pygame.image.load(os.path.join("assets", "background.png")).convert()
-BACKGROUND_MENU = pygame.image.load(os.path.join("assets", "background2.jpg")).convert()
-BACKGROUND_MENU_TRANSFORMADA = pygame.transform.scale(BACKGROUND_MENU, (800, 800))
-NAVE_ESPACIAL_IMAGEN = pygame.image.load(os.path.join("assets", "spaceship_red.png"))
-NAVE_ESPACIAL_WIDTH = 100
-NAVE_ESPACIAL_HEIGHT = 95
-NAVE_ESPACIAL = pygame.transform.rotate(pygame.transform.scale(NAVE_ESPACIAL_IMAGEN, (NAVE_ESPACIAL_WIDTH, NAVE_ESPACIAL_HEIGHT)), 90)
-VELOCIDAD_NAVE = 5
-VELOCIDAD_DISPARO = 5
-MAXIMOS_DISPAROS = 3
+
 disparos = []
-DISPARO_IMPACTO = pygame.USEREVENT + 2
-IMAGEN_PRODUCTO_WIDTH = 50
-IMAGEN_PRODUCTO_HEIGHT = 50
-
-def dibujar_nave(rect):
-    screen.blit(NAVE_ESPACIAL, (rect.x, rect.y))
-
-def manejar_movimiento_nave(tecla_presionada , rectangulo):
-    if tecla_presionada[pygame.K_w] and rectangulo.y - VELOCIDAD_NAVE >= 100 and rectangulo.y - VELOCIDAD_NAVE <= 550: # Arriba
-        rectangulo.y -= VELOCIDAD_NAVE
-    
-    if tecla_presionada[pygame.K_s] and rectangulo.y - VELOCIDAD_NAVE >= 0 and rectangulo.y - VELOCIDAD_NAVE <= 500: # Abajo
-        rectangulo.y += VELOCIDAD_NAVE
-
-
-def manejar_disparos(lista_disparos, rectangulo):
-    for disparo in lista_disparos:
-        disparo.x += VELOCIDAD_DISPARO
-        if rectangulo.colliderect(disparo):
-            pygame.event.post(pygame.event.Event(DISPARO_IMPACTO, rect=rectangulo.y))
-            lista_disparos.remove(disparo)
-        if disparo.x > ANCHO:
-            lista_disparos.remove(disparo)
-
-def dibujar_rect_productos():
-    lista_rect = []
-    y2 = 75
-    for i in range(0,7):
-        rect = pygame.Rect(600, y2, IMAGEN_PRODUCTO_WIDTH,IMAGEN_PRODUCTO_HEIGHT)
-        lista_rect.append(rect)
-        y2 += 75
-    return lista_rect
-
-def dibujar_disparos(disparos):
-    for disparo in disparos:
-        pygame.draw.rect(screen, (255,0,0), disparo)
-
-def get_font(size): 
-    return pygame.font.Font("assets/font.ttf", size)
 
 def main():
     rect = pygame.Rect(100, 300, NAVE_ESPACIAL_WIDTH,NAVE_ESPACIAL_HEIGHT)
@@ -76,9 +28,7 @@ def main():
     for i in lista_rectangulos_prod:
         diccionario[contador] = [i.x, i.y]
         contador += 1
-    print(diccionario)
     gameClock = pygame.time.Clock()
-    totaltime = 0
     nivel = 1
     segundos = TIEMPO_MAX # Tiempo max va aca
     corriendo = True
@@ -86,11 +36,9 @@ def main():
     producto_candidato = ""
     lista_productos = lectura()  
     producto = buscar_producto(lista_productos)
-    print(producto)
     productos_en_pantalla = dameProductosAleatorios(producto, lista_productos, MARGEN)
     producto_elegido_programa = dameProducto(productos_en_pantalla[1:], MARGEN)
     index = index_producto_elegido(productos_en_pantalla, producto_elegido_programa)
-    print(productos_en_pantalla)
     dibujar(screen, productos_en_pantalla, producto,
             producto_candidato, puntos, segundos, nivel)
     time_delay = 1000
@@ -100,8 +48,6 @@ def main():
 
     while corriendo:
         gameClock.tick(40)
-        totaltime += gameClock.get_time()
-
         for e in pygame.event.get():
 
             if e.type == QUIT:
@@ -113,22 +59,6 @@ def main():
                     juego_terminado(puntos)
                     corriendo = False
             if e.type == KEYDOWN:
-                # Hay un error si pones una letra por ejemplo y clickeas
-                # aunque no aparezca en  pantalla!
-                # letra = dameLetraApretada(e.key)
-                # producto_candidato += letra  # va concatenando las letras que escribe
-                # if e.key == K_BACKSPACE:
-                #     producto_candidato = producto_candidato[0:len(producto_candidato)-1]
-                # if e.key == K_RETURN:  # presionó enter
-                #     nivel += 1
-                   
-                #     if indice < len(productos_en_pantalla):
-                #         puntos += procesar(producto, productos_en_pantalla[indice], MARGEN)
-                #         producto_candidato = ""
-                #         producto = dameProducto(lista_productos, MARGEN)
-                #         productos_en_pantalla = dameProductosAleatorios(producto, lista_productos, MARGEN)
-                #     else:
-                #         producto_candidato = ""
                 if e.key == pygame.K_RCTRL and len(disparos) < MAXIMOS_DISPAROS:
                     bullet = pygame.Rect(rect.x + rect.width, rect.y + rect.height // 2 - 2, 10, 5)
                     disparos.append(bullet)
@@ -136,11 +66,12 @@ def main():
                 nivel += 1
                 if e.rect == diccionario[index][1]:
                     print("PRODUCTO ELEGIDO GOLPEADO!!!")
-                    puntos += procesar(producto, productos_en_pantalla[index], MARGEN)
+                    puntos += procesar(productos_en_pantalla[index])
                 
                 producto = dameProducto(lista_productos, MARGEN)
                 productos_en_pantalla = dameProductosAleatorios(producto, lista_productos, MARGEN)
                 producto_elegido_programa = dameProducto(productos_en_pantalla[1:], MARGEN)
+                print(producto_elegido_programa)
                 index = index_producto_elegido(productos_en_pantalla, producto_elegido_programa)    
         for i in lista_rectangulos_prod:
             manejar_disparos(disparos,i)
@@ -149,14 +80,12 @@ def main():
 
         screen.fill(COLOR_FONDO)
         screen.blit(BACKGROUND, (0, 0))
-        dibujar_nave(rect)
-        dibujar_disparos(disparos)
+        dibujar_nave(screen, rect)
+        dibujar_disparos(screen, disparos)
         dibujar(screen, productos_en_pantalla, producto,
             producto_candidato, puntos, segundos, nivel)
 
         pygame.display.update()
-
-
 
 def menu():
     corriendo = True
@@ -262,7 +191,6 @@ def instrucciones():
         fpsClock.tick(30)
         pygame.display.update()
             
-
 def juego_terminado(puntos):
     fpsClock = pygame.time.Clock()
     pygame.display.flip()
@@ -306,20 +234,13 @@ def juego_terminado(puntos):
 
                 if event.key == K_BACKSPACE:
                     apodo = apodo[0:len(apodo) - 2]
-            
-            # if event.type == pygame.KEYDOWN:
-            #     if event.key == K_RETURN:
-            #         print("hello world")
-            #     if event.key == K_BACKSPACE:
-            #         apodo = apodo[0:len(apodo) - 2]
-            #         print("h")
+    
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
         screen.blit(texto, (ANCHO / 2.5, 400)) 
         fpsClock.tick(30)
         pygame.display.update()
-
 
 def records(apodo):
     fpsClock = pygame.time.Clock()
@@ -328,7 +249,7 @@ def records(apodo):
     font2 = pygame.font.Font("assets/font.ttf", 20)
     corriendo = True
     while corriendo:
-        pintarDeNuevo(font, font2, apodo)
+        pintarRecords(screen, font, font2, apodo)
         MENU_MOUSE_POSICION = pygame.mouse.get_pos()
         MENU_TEXT = get_font(30).render("", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(400, 100))
@@ -351,29 +272,6 @@ def records(apodo):
             pygame.display.flip()
 
 
-def pintarDeNuevo(font, font2, apodo):
-    apodo = apodo.split(" ")[0:-1]
-    apodo = "".join(apodo)
-    print(apodo)
-    screen.fill((0, 0, 0))
-    texto =  font.render("Highscores", True, (0, 0, 255))
-    screen.blit(texto, [175, 25])
-    texto =  font2.render("Posicion     Apodo          Puntos", True, (0, 0, 255))
-    screen.blit(texto, [25, 125])
-    archivo_records = open("./records.txt")
-    y = 30
-    for linea in archivo_records:
-            linea = linea[0:-1]
-            if linea.find(apodo) >= 0:
-                texto = font2.render(linea, True, (255, 200, 23))
-                y+= 30
-                screen.blit(texto, [25, 125 + y])
-            else:
-                texto = font2.render(linea, True, (255, 0, 0))
-                y+= 30
-                screen.blit(texto, [25, 125 + y])
-
-    archivo_records.close()
 
 
 # Programa Principal ejecuta Main

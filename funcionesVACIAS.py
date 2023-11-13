@@ -18,8 +18,8 @@ def lectura():
     archivo.close()
     return lista
 
-
-# def lectura2():
+# Funcion de prueba
+# def lectura():
 #     return [["Arroz", 1001, 1037],
 #             ["Yerba mate", 4546, 4904],
 #             ["Televisor Smart", 2055, 2439],
@@ -36,10 +36,8 @@ def lectura():
 #             ["Microondas", 4254, 4624]]
 
 
-#De la lista de productos elige uno al azar y devuelve una lista de 3 elementos, el primero el nombre del producto, el segundo si es economico
-#o premium y el tercero el precio.
+
 def buscar_producto(lista_productos):
-    # producto = ["Silla de oficina", "(premium)", 4391]
     producto_azar = lista_productos[random.randint(0, len(lista_productos) - 1)]
     index = random.randint(1,2)
     precio = producto_azar[index]
@@ -50,7 +48,6 @@ def buscar_producto(lista_productos):
 
 
 
-#Elige el producto. Debe tener al menos dos productos con un valor similar
 def dameProducto(lista_productos, margen):
     busqueda = []
     while len(busqueda) < 2:
@@ -67,19 +64,14 @@ def dameProducto(lista_productos, margen):
 #Devuelve True si existe el precio recibido como parametro aparece al menos 2 veces. Debe considerar el Margen.
 def esUnPrecioValido(precio, lista_productos, margen):
     busqueda = list(filter(lambda x: abs(precio - x[2]) < margen or precio == x[1], lista_productos))
-    return len(busqueda) >= 3
+    return len(busqueda) >= 2
 
 
-# Busca el precio del producto_principal y el precio del producto_candidato, si son iguales o dentro
-# del margen, entonces es valido y suma a la canasta el valor del producto. No suma si eligió directamente
-#el producto
-def procesar(producto_principal, producto_candidato, margen):
-    precio_principal = producto_principal[2]
-    precio_candidato = producto_candidato[2]
-    if precio_principal == precio_candidato or abs(precio_principal - precio_candidato) < margen:
-        return producto_principal[2]
-    else:
-        return 0
+
+def procesar(producto_elegido):
+    precio_elegido = producto_elegido[2]
+    return precio_elegido
+  
 
 
 

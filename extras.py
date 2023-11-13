@@ -3,7 +3,6 @@ import pygame, os
 from pygame.locals import *
 from configuracion import *
 
-     
  
 
 
@@ -65,3 +64,64 @@ def dibujar(screen, productos_en_pantalla, producto_principal, producto_candidat
     screen.blit(ren3, (10, 10))
     screen.blit(ren4, (300, 10))
     screen.blit(ren5, (600, 40))
+
+def pintarRecords(screen, font, font2, apodo):
+    apodo = apodo.split(" ")[0:-1]
+    apodo = "".join(apodo)
+    print(apodo)
+    screen.fill((0, 0, 0))
+    texto =  font.render("Highscores", True, (0, 0, 255))
+    screen.blit(texto, [175, 25])
+    texto =  font2.render("Posicion     Apodo          Puntos", True, (0, 0, 255))
+    screen.blit(texto, [25, 125])
+    archivo_records = open("./records.txt")
+    y = 30
+    for linea in archivo_records:
+            linea = linea[0:-1]
+            if linea.find(apodo) >= 0:
+                texto = font2.render(linea, True, (255, 200, 23))
+                y+= 30
+                screen.blit(texto, [25, 125 + y])
+            else:
+                texto = font2.render(linea, True, (255, 0, 0))
+                y+= 30
+                screen.blit(texto, [25, 125 + y])
+
+    archivo_records.close()
+
+def dibujar_rect_productos():
+    lista_rect = []
+    y2 = 75
+    for i in range(0,7):
+        rect = pygame.Rect(600, y2, IMAGEN_PRODUCTO_WIDTH,IMAGEN_PRODUCTO_HEIGHT)
+        lista_rect.append(rect)
+        y2 += 75
+    return lista_rect
+
+
+def dibujar_disparos(screen, disparos):
+    for disparo in disparos:
+        pygame.draw.rect(screen, (255,0,0), disparo)
+
+def get_font(size): 
+    return pygame.font.Font("assets/font.ttf", size)
+
+def dibujar_nave(screen, rect):
+    screen.blit(NAVE_ESPACIAL, (rect.x, rect.y))
+
+def manejar_movimiento_nave(tecla_presionada , rectangulo):
+    if tecla_presionada[pygame.K_w] and rectangulo.y - VELOCIDAD_NAVE >= 100 and rectangulo.y - VELOCIDAD_NAVE <= 550: # Arriba
+        rectangulo.y -= VELOCIDAD_NAVE
+    
+    if tecla_presionada[pygame.K_s] and rectangulo.y - VELOCIDAD_NAVE >= 0 and rectangulo.y - VELOCIDAD_NAVE <= 500: # Abajo
+        rectangulo.y += VELOCIDAD_NAVE
+
+
+def manejar_disparos(lista_disparos, rectangulo):
+    for disparo in lista_disparos:
+        disparo.x += VELOCIDAD_DISPARO
+        if rectangulo.colliderect(disparo):
+            pygame.event.post(pygame.event.Event(DISPARO_IMPACTO, rect=rectangulo.y))
+            lista_disparos.remove(disparo)
+        if disparo.x > ANCHO:
+            lista_disparos.remove(disparo)
