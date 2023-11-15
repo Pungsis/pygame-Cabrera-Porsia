@@ -48,15 +48,13 @@ def buscar_producto(lista_productos):
 
 
 
-def dameProducto(lista_productos, margen):
-    busqueda = []
-    while len(busqueda) < 2:
-        producto = lista_productos[random.randint(0,5)]
-        if producto[1] == "(Premium)":
-            busqueda = list(filter(lambda x: abs(producto[2] - x[2]) < margen, lista_productos))
-        else:
-            busqueda = list(filter(lambda x: abs(producto[2] - x[2]) < margen, lista_productos))
-    return producto
+def dameProducto(producto, lista_productos, margen):
+    producto_a_elegir = lista_productos[random.randint(0,len(lista_productos) - 1)]
+
+    while abs(producto[2] - producto_a_elegir[2]) > margen:
+       producto_a_elegir = lista_productos[random.randint(0,len(lista_productos) - 1)]
+    
+    return producto_a_elegir
 
 
 
@@ -64,7 +62,7 @@ def dameProducto(lista_productos, margen):
 #Devuelve True si existe el precio recibido como parametro aparece al menos 2 veces. Debe considerar el Margen.
 def esUnPrecioValido(precio, lista_productos, margen):
     busqueda = list(filter(lambda x: abs(precio - x[2]) < margen or precio == x[1], lista_productos))
-    return len(busqueda) >= 2
+    return busqueda
 
 
 
@@ -81,10 +79,11 @@ def procesar(producto_elegido):
 def dameProductosAleatorios(producto, lista_productos, margen):
 
     #  Genero una lista de 7 productos (incluido el producto principal) 
-    lista_aleatoria = generarListaProdAleatorios(producto, lista_productos)
     # Quiero garantizar que al menos 2 tengan precios similares
-    while esUnPrecioValido(producto[2], lista_aleatoria, margen):
-        lista_aleatoria = generarListaProdAleatorios(producto, lista_productos)
+    lista_productos_relacionados = []
+    while len(lista_productos_relacionados) < 2:
+        lista_aleatoria = generarListaProdAleatorios(producto, lista_productos, lista_productos_relacionados)
+        lista_productos_relacionados = esUnPrecioValido(producto[2], lista_aleatoria, margen)
 
     def transformada(x):
             azar = random.randint(1,2)
@@ -105,12 +104,15 @@ def index_producto_elegido(lista_productos, producto_elegido):
             
     return index
 
-def generarListaProdAleatorios(producto, lista_productos):
+def generarListaProdAleatorios(producto, lista_productos, lista_productos_relacionados):
     lista_copia = lista_productos[:]
-    print(len(lista_copia))
+    solo_nombres = []
+    for i in lista_productos_relacionados:
+        solo_nombres.append(i[0])
+    print(solo_nombres)
     # Busco el producto de la copia de la lista de productos y lo remuevo
-    lista_copia = list(filter(lambda x: producto[0] != x[0], lista_copia))
-    nueva_lista = []
+    lista_copia = list(filter(lambda x: producto[0] != x[0] or x[0] in solo_nombres, lista_copia))
+    nueva_lista = [] + lista_productos_relacionados
     while len(nueva_lista) < 6:
         index_azar = random.randint(0, len(lista_copia) - 1)
         nueva_lista.append(lista_copia[index_azar])

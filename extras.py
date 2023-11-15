@@ -45,20 +45,9 @@ def dibujar(screen, productos_en_pantalla, producto_principal, producto_candidat
             screen.blit(render, (675, y2 + 20))
             render = defaultFontSmall.render(f"{producto[1]}", True, (255,255,255))
             screen.blit(render, (675, y2 + 50))
-
-            
-
         y2 += 75
-        # nombre_en_pantalla = str(pos) + " - "+producto[0]+producto[1]
-        # if producto[0] == producto_principal[0] and producto[1]== producto_principal[1]:
-        #     screen.blit(defaultFontGrande.render(nombre_en_pantalla,
-        #                 1, COLOR_TIEMPO_FINAL), (x_pos, y_pos))
-        # else:
-        #     screen.blit(defaultFontGrande.render(
-        #         nombre_en_pantalla, 1, COLOR_LETRAS), (x_pos, y_pos))
         pos += 1
         y_pos += ESPACIO
-
     screen.blit(ren1, (190, 570))
     screen.blit(ren2, (600, 10))
     screen.blit(ren3, (10, 10))
@@ -68,7 +57,6 @@ def dibujar(screen, productos_en_pantalla, producto_principal, producto_candidat
 def pintarRecords(screen, font, font2, apodo):
     apodo = apodo.split(" ")[0:-1]
     apodo = "".join(apodo)
-    print(apodo)
     screen.fill((0, 0, 0))
     texto =  font.render("Highscores", True, (0, 0, 255))
     screen.blit(texto, [175, 25])

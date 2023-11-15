@@ -37,7 +37,7 @@ def main():
     lista_productos = lectura()  
     producto = buscar_producto(lista_productos)
     productos_en_pantalla = dameProductosAleatorios(producto, lista_productos, MARGEN)
-    producto_elegido_programa = dameProducto(productos_en_pantalla[1:], MARGEN)
+    producto_elegido_programa = dameProducto(producto, productos_en_pantalla[1:], MARGEN)
     index = index_producto_elegido(productos_en_pantalla, producto_elegido_programa)
     dibujar(screen, productos_en_pantalla, producto,
             producto_candidato, puntos, segundos, nivel)
@@ -68,9 +68,11 @@ def main():
                     print("PRODUCTO ELEGIDO GOLPEADO!!!")
                     puntos += procesar(productos_en_pantalla[index])
                 
-                producto = dameProducto(lista_productos, MARGEN)
+                producto = buscar_producto(lista_productos)
+                print(producto)
                 productos_en_pantalla = dameProductosAleatorios(producto, lista_productos, MARGEN)
-                producto_elegido_programa = dameProducto(productos_en_pantalla[1:], MARGEN)
+                print(productos_en_pantalla)
+                producto_elegido_programa = dameProducto(producto, productos_en_pantalla[1:], MARGEN)
                 print(producto_elegido_programa)
                 index = index_producto_elegido(productos_en_pantalla, producto_elegido_programa)    
         for i in lista_rectangulos_prod:
@@ -145,7 +147,6 @@ def menu():
     
 def instrucciones():
     fpsClock = pygame.time.Clock()
-    pygame.display.flip()
     font_titulo = pygame.font.Font('assets/font.ttf', 20)
     font_texto = pygame.font.Font('assets/font.ttf', 14)
     corriendo = True
@@ -269,7 +270,7 @@ def records(apodo):
             MENU_BUTTON.actualizar(screen)
             
             fpsClock.tick(30)
-            pygame.display.flip()
+            pygame.display.update()
 
 
 
